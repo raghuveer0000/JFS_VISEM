@@ -1,55 +1,64 @@
 let subjects = document.getElementsByClassName("subject");
 
-document.getElementById("total").innerText = "$0";
-
-// Calculate Total Fee
 for (let i = 0; i < subjects.length; i++) {
     subjects[i].addEventListener("change", function () {
-
         let total = 0;
-
         for (let j = 0; j < subjects.length; j++) {
             if (subjects[j].checked) {
                 total += parseInt(subjects[j].value);
             }
         }
-
         document.getElementById("total").innerText = "$" + total;
     });
 }
 
-// Form Submit Handling
 document.getElementById("regForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
     let name = document.getElementById("name").value.trim();
-
+    let resultBox = document.getElementById("result");
+	
+    resultBox.innerHTML = "";
+    resultBox.style.display = "block";
     if (name === "") {
-        alert("Please enter your name!");
+        resultBox.style.background = "#ffe6e6";
+        resultBox.style.border = "2px solid red";
+        resultBox.style.color = "red";
+        resultBox.innerHTML = "Please enter your name!";
         return;
     }
+
 
     let selectedSubjects = [];
     let totalAmount = 0;
 
     for (let i = 0; i < subjects.length; i++) {
         if (subjects[i].checked) {
-            let subjectName = subjects[i].parentElement.innerText.trim();
-            selectedSubjects.push(subjectName);
+            selectedSubjects.push(subjects[i].parentElement.innerText.trim());
             totalAmount += parseInt(subjects[i].value);
-    
         }
     }
 
     if (selectedSubjects.length === 0) {
-        alert("Please select at least one subject!");
+        resultBox.style.background = "#ffe6e6";
+        resultBox.style.border = "2px solid red";
+        resultBox.style.color = "red";
+        resultBox.innerHTML = "Please select at least one subject!";
         return;
     }
+    resultBox.style.background = "#e8ffe8";
+    resultBox.style.border = "2px solid green";
+    resultBox.style.color = "green";
 
-    alert(
-        "Registration Successful!\n\n" +
-        "Student Name : " + name + "\n\n" +
-        "Selected Subjects:\n" + selectedSubjects.join("\n") + "\n\n" +
-        "Total Fee: $" + totalAmount
-    );
+    let msg = "<b>Registration Successful!</b><br><br>";
+    msg += "<b>Name:</b> " + name + "<br><br>";
+    msg += "<b>Selected Subjects:</b><br>";
+
+    for (let j = 0; j < selectedSubjects.length; j++) {
+        msg += j+1 +". "+ selectedSubjects[j] + "<br>";
+    }
+
+    msg += "<br><b>Total Fee:</b> $" + totalAmount;
+
+    resultBox.innerHTML = msg;
 });
